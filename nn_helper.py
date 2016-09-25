@@ -1,8 +1,8 @@
 import numpy as np
 
 # names of batch training types:
-solo = -1
-group = 0
+SOLO = -1
+GROUP = 0
 
 cat = np.concatenate
 

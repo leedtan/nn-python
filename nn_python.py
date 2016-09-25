@@ -163,10 +163,10 @@ class nnp(object):
         return X
     
     def _assign_batches(self, batch_type):
-        if batch_type == solo:
+        if batch_type == SOLO:
             self.num_batches = self.samples
             self.batch_size = 1
-        if batch_type == group:
+        if batch_type == GROUP:
             self.num_batches = 1
             self.batch_size = self.samples
         if batch_type > 0:
@@ -210,7 +210,7 @@ class nnp(object):
         return X
         
     def train(self, X, y, LR=1, epochs=10,
-              batch_type=group, verb=0, re_init=3, re_init_d=10):
+              batch_type=GROUP, verb=0, re_init=3, re_init_d=10):
         X = self._prepare_training(X,y,LR,batch_type, verb)
         self._init_k_times(X, y, re_init, re_init_d, LR)
         self.best_perf = self.gb_perf
