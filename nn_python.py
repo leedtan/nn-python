@@ -46,9 +46,11 @@ class nnp(object):
                         self.layers[c_idx])*std
                       
     def _set_one_trans(self, trans, idx):
-        if trans == 'sigmoid':
-            self.trans[idx] = sigmoid
-            self.trans_p[idx] = sigmoid_p
+        if trans in trans_fcns:
+            self.trans[idx], self.trans_p[idx] = trans_fcns[trans]
+        else:
+            print("Error: " + str(trans) + " not known in tran_fcns")
+            sys.exit(0)
                         
     def _settrans(self, trans):
         self.trans = [0] * (len(self.layers))
@@ -90,19 +92,22 @@ class nnp(object):
             for col in range(len(self.weights[0])):
                 if self.Lmap[row][col]:
                     self.weights[row][col] += self.batch_deltas[row][col]
-                    #self.weights[row][col] += self.batch_deltas[row][col] / (col - row)
-    def _run_epoch(self, X, y):
+                    
+    def _run_batch(self, batch, X, Y):
+        self.batch_deltas = zero_weights(self.weights)
+        for i in batch:
+            self._train_one_sample(X[i], Y[i])
+        self._update_all_batch_deltas()
+        self._test_batch(X, Y)
+    
+    def _run_epoch(self, X, Y):
         perm = np.random.permutation(self.samples)
         for batch_idx in range(self.num_batches):
             batch = perm[self.batch_size * batch_idx:self.batch_size *
                          (batch_idx + 1)]
             if batch_idx == self.num_batches - 1:
                 batch = perm[self.batch_size * batch_idx:]
-            self.batch_deltas = zero_weights(self.weights)
-            for i in batch:
-                self._train_one_sample(X[i], y[i])
-            self._update_all_batch_deltas()
-            self._test_batch(X, y)
+            self._run_batch(batch, X, Y)
 
     def _prop_back_one_layer(self,idx):
         return np.sum(
@@ -146,12 +151,12 @@ class nnp(object):
         if self.verb > 0:
             print (batch_perf, self.LR)
 
-    def _test_batch(self, X, y):
+    def _test_batch(self, X, Y):
         batch_perf = 0
         for i in range(len(X)):
             self.act_vals[0] = X[i]
             self._prop_fwd()
-            batch_perf += self.perf_fcn(y[i], self.act_vals[-1]) / self.samples
+            batch_perf += self.perf_fcn(Y[i], self.act_vals[-1]) / self.samples
         self._update_LR(batch_perf)
         
     def _verify_x(self,X):
@@ -173,22 +178,22 @@ class nnp(object):
             self.num_batches = int(self.samples ** (1 / batch_type))
             self.batch_size = int(np.ceil(self.samples / self.num_batches))
             
-    def _re_init_once(self, X, y):
-        self._run_epoch(X, y)
+    def _re_init_once(self, X, Y):
+        self._run_epoch(X, Y)
         if self.best_perf < self.gb_perf:
             self.gb_perf = self.best_perf
             self.gb_weights = copy_weights(self.best_weights)
             self.gb_LR = self.LR
             
-    def _init_k_times(self, X, y, re_init, re_init_d, LR):
+    def _init_k_times(self, X, Y, re_init, re_init_d, LR):
         for init_idx in range(re_init):
             self._initweights(std = 2 * 10 ** (init_idx / re_init))
             self.best_perf = np.inf
             self.LR = LR
             for _ in range(re_init_d):
-                self._re_init_once(X, y)
+                self._re_init_once(X, Y)
                 
-    def _prepare_training(self,X,y,LR,batch_type,verb):
+    def _prepare_training(self,X,Y,LR,batch_type,verb):
         X = self._verify_x(X)
         if isinstance(X, bool):
             print ("X size %d, need %d" % (X.shape[1], self.layers[0]))
@@ -200,8 +205,8 @@ class nnp(object):
         self.samples = X.shape[0]
         self.verb = verb
         self.LR = LR
-        self.y_norm = np.amax(np.abs(np.vstack((self.y_norm, y))))
-        y = y / self.y_norm
+        self.y_norm = np.amax(np.abs(np.vstack((self.y_norm, Y))))
+        Y = Y / self.y_norm
         self._assign_batches(batch_type)
         self.best_weights = copy_weights(self.weights)
         self.gb_weights = copy_weights(self.best_weights)
@@ -209,16 +214,16 @@ class nnp(object):
         self.gb_LR = self.LR
         return X
         
-    def train(self, X, y, LR=1, epochs=10,
+    def train(self, X, Y, LR=1, epochs=10,
               batch_type=GROUP, verb=0, re_init=3, re_init_d=10):
-        X = self._prepare_training(X,y,LR,batch_type, verb)
-        self._init_k_times(X, y, re_init, re_init_d, LR)
+        X = self._prepare_training(X,Y,LR,batch_type, verb)
+        self._init_k_times(X, Y, re_init, re_init_d, LR)
         self.best_perf = self.gb_perf
         self.best_weights = copy_weights(self.gb_weights)
         self.weights = copy_weights(self.best_weights)
         self.LR = self.gb_LR
         for _ in range(epochs):
-            self._run_epoch(X, y)
+            self._run_epoch(X, Y)
         self.weights = copy_weights(self.best_weights)
 
     def predict(self, x):

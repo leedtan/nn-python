@@ -5,7 +5,6 @@ SOLO = -1
 GROUP = 0
 
 cat = np.concatenate
-
 def sigmoid(x):
     return 1.0 / (1.0 + np.exp(np.clip(-x, -50, 50)))
 
@@ -13,13 +12,14 @@ def sigmoid(x):
 def sigmoid_p(x):
     return sigmoid(x) * (1.0 - sigmoid(x))
 
+trans_fcns = {'sigmoid': [sigmoid, sigmoid_p]}
 
-def mse(y, a):
-    return np.sum(np.square(y - a))
+def mse(Y, a):
+    return np.sum(np.square(Y - a))
 
 
-def mse_p(y, a):
-    return (y - a)
+def mse_p(Y, a):
+    return (Y - a)
 
 
 def copy_weights(weights):
@@ -45,3 +45,10 @@ def normalize(vect):
 
 def denormalize(vect, stdev, offset):
     return (vect * stdev) + offset
+
+
+def print_y(y_predict, Y, dec = 2):
+    print (np.mean(np.square(y_predict - Y)))
+    if y_predict.ndim > 1:
+        y_predict = y_predict.flatten()
+    print (np.around(y_predict, dec))
