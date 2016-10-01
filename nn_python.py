@@ -1,8 +1,4 @@
 import sys
-#import pandas as pd
-#import numpy as np
-#import matplotlib
-#import matplotlib.pyplot as plt
 import copy
 from nn_helper import *
 from array import array
@@ -12,7 +8,7 @@ class nnp(object):
 
     def __init__(self, layers, trans='sigmoid', perf_fcn='mse',
                  reg=0, netstruc='ff'):
-        self.y_norm = np.ones(layers[-1])
+        self.Yscale, self.Yoffset = [0,0]
         self.best_perf = np.inf
         self.layers = layers
         self.reg = reg
@@ -52,6 +48,13 @@ class nnp(object):
             print("Error: " + str(trans) + " not known in tran_fcns")
             sys.exit(0)
                         
+    def _set_trans_list(self,trans):
+        if len(trans) < len(self.layers) - 1:
+            print('wrong number of transfer functions listed')
+            sys.exit(0)
+        for idx in range(1, len(self.layers)):
+            self._set_one_trans(trans, idx)
+            
     def _settrans(self, trans):
         self.trans = [0] * (len(self.layers))
         self.trans_p = [0] * (len(self.layers))
@@ -59,11 +62,7 @@ class nnp(object):
             for idx in range(1, len(self.layers)):
                 self._set_one_trans(trans, idx)
         elif isinstance(trans, list):
-            if len(trans) < len(self.layers) - 1:
-                print('wrong number of transfer functions listed')
-                sys.exit(0)
-            for idx in range(1, len(self.layers)):
-                self._set_one_trans(trans, idx)
+            self._set_trans_list(trans)
                 
     def _initLmap(self, netstruc):
         if isinstance(netstruc, str):
@@ -192,7 +191,30 @@ class nnp(object):
             self.LR = LR
             for _ in range(re_init_d):
                 self._re_init_once(X, Y)
-                
+             
+    
+    def _calc_norm_Y(self, Y):
+        scale = np.amax(Y) - np.amin(Y)
+        Y = Y / scale
+        offset = np.amin(Y)
+        Y = Y - offset
+        #At this point, Y is [0,1]
+        if self.trans[-1] in [sigmoid]:
+            pass
+        if self.trans[-1] in [tanh]:
+            scale = scale / 2
+            offset += 0.5
+        return scale, offset
+    
+    
+    def _normalize_Y(self, Y):
+        return (Y / self.Yscale) - self.Yoffset
+    
+    
+    def _denormalize_Y(self, Y):
+        return (Y + self.Yoffset) * self.Yscale
+    
+    
     def _prepare_training(self,X,Y,LR,batch_type,verb):
         X = self._verify_x(X)
         if isinstance(X, bool):
@@ -205,8 +227,9 @@ class nnp(object):
         self.samples = X.shape[0]
         self.verb = verb
         self.LR = LR
-        self.y_norm = np.amax(np.abs(np.vstack((self.y_norm, Y))))
-        Y = Y / self.y_norm
+        if self.Yscale == 0:
+            self.Yscale, self.Yoffset = self._calc_norm_Y(Y)
+        Y = self._normalize_Y(Y)
         self._assign_batches(batch_type)
         self.best_weights = copy_weights(self.weights)
         self.gb_weights = copy_weights(self.best_weights)
@@ -230,8 +253,10 @@ class nnp(object):
         x = apply_norm(x, self.Xstd, self.Xoffset)
         self.samples = x.shape[0]
         output = np.empty([self.samples, self.act_vals[-1].shape[0]])
+        #this can be made more efficient through matrix math.
         for d_idx in range(self.samples):
             self.act_vals[0] = np.atleast_1d(x[d_idx])
             self._prop_fwd()
             output[d_idx] = self.act_vals[-1]
-        return output * self.y_norm
+        output = self._denormalize_Y(output)
+        return output

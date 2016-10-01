@@ -12,7 +12,20 @@ def sigmoid(x):
 def sigmoid_p(x):
     return sigmoid(x) * (1.0 - sigmoid(x))
 
-trans_fcns = {'sigmoid': [sigmoid, sigmoid_p]}
+
+def tanh(x):
+    return np.tanh(x)
+
+
+def tanh_p(x):
+    return 1.0 - x ** 2
+
+
+trans_fcns = {
+              'sigmoid': [sigmoid, sigmoid_p],
+              'tanh': [tanh, tanh_p]
+              }
+
 
 def mse(Y, a):
     return np.sum(np.square(Y - a))
@@ -48,7 +61,6 @@ def denormalize(vect, stdev, offset):
 
 
 def print_y(y_predict, Y, dec = 2):
-    print (np.mean(np.square(y_predict - Y)))
     if y_predict.ndim > 1:
         y_predict = y_predict.flatten()
     print (np.around(y_predict, dec))
