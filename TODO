@@ -1,0 +1,17 @@
+EASY: 
+Redo predict to do forward pass with matrix math instead of for loop
+Implement crossentropy perf fcn
+Implement softmax transfer fcn (to use with cross entropy to output layer)
+Implement purelin transfer fcn (to use as output layer for regression)
+Add test functions
+
+Lot of work:
+Add hypterparameter optimization functions
+Automatic k-fold validation
+
+Largest assignments
+Read data using pandas (build api/apply to clean then non-clean numeric and non-numeric data)
+Add recurrent connections (backprop length passed in as parameter)
+implement convolutional layer
+Implement pooling layer
+Implement ADAM convex optimization algo for backpropogation
