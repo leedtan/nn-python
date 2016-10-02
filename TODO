@@ -6,9 +6,10 @@ Implement purelin transfer fcn (to use as output layer for regression)
 Add test functions
 Add Constant learning rate (choose optimization algorithm)
 
-Lot of work:
+Medium:
 Add hypterparameter optimization functions
 Automatic k-fold validation
+End training if objective function met//not changing // num_epochs reaches
 
 Largest assignments
 Read data using pandas (build api/apply to clean then non-clean numeric and non-numeric data)
