@@ -4,6 +4,7 @@ Implement crossentropy perf fcn
 Implement softmax transfer fcn (to use with cross entropy to output layer)
 Implement purelin transfer fcn (to use as output layer for regression)
 Add test functions
+Add Constant learning rate (choose optimization algorithm)
 
 Lot of work:
 Add hypterparameter optimization functions
