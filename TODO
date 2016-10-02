@@ -3,7 +3,7 @@ EASY:
 Implement crossentropy perf fcn (V)
 Implement softmax transfer fcn (to use with cross entropy to output layer) (A)
 Implement purelin transfer fcn (to use as output layer for regression) (V)
-Add test functions (L)
+Add test functions (A/L)
 Add Constant learning rate (choose optimization algorithm) (V)
 
 Medium:
@@ -12,7 +12,7 @@ Automatic k-fold validation (A)
 End training if objective function met//not changing // num_epochs reaches (L)
 
 Largest assignments
-Redo predict to do forward pass with matrix math instead of for loop
+Redo predict to do forward pass with matrix math instead of for loop (A)
 Read data using pandas (build api/apply to clean then non-clean numeric and non-numeric data)
 Add recurrent connections (backprop length passed in as parameter)
 implement convolutional layer
