@@ -5,6 +5,8 @@ SOLO = -1
 GROUP = 0
 
 cat = np.concatenate
+
+
 def sigmoid(x):
     return 1.0 / (1.0 + np.exp(np.clip(-x, -50, 50)))
 
@@ -48,6 +50,7 @@ def zero_weights(weights):
 def apply_norm(X, Xstd, Xoffset):
     return (X - Xoffset)/Xstd
 
+
 def normalize(vect):
     offset = np.mean(vect)
     vect = vect - offset
@@ -60,7 +63,7 @@ def denormalize(vect, stdev, offset):
     return (vect * stdev) + offset
 
 
-def print_y(y_predict, Y, dec = 2):
+def print_y(y_predict, Y, dec=2):
     if y_predict.ndim > 1:
         y_predict = y_predict.flatten()
-    print (np.around(y_predict, dec))
+    print(np.around(y_predict, dec))
