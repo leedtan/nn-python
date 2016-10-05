@@ -1,6 +1,7 @@
 import nn_python as nn_p
 import nn_helper as helper
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def test_xor(verb=0, re_init=10, netstruc='ff'):
@@ -17,7 +18,7 @@ def test_xor(verb=0, re_init=10, netstruc='ff'):
         helper.print_y(y_predict, Y)
     return np.mean(np.square(y_predict - Y))
 np.random.seed(2)
-test_xor()
+#test_xor()
 
 
 def test_xor3(verb=0, netstruc='ff', **kwargs):
@@ -39,22 +40,26 @@ def test_xor3(verb=0, netstruc='ff', **kwargs):
     if verb > -1:
         helper.print_y(y_predict, Y)
     return np.mean(np.square(y_predict - Y))
-test_xor3(objective = 10**-10, del_thresh=10**-15, max_fail = 100, nudge = 10)
+#test_xor3(objective = 10**-10, del_thresh=10**-15, max_fail = 100, nudge = 10)
 
 
-# Does not yet work well.
-def test_sine(verb=0, netstruc='ff'):
-    tNN = nn_p.nnp([1, 100, 1], reg=10 ** -5, trans='tanh')
+# Does not yet work well. needs purelin transfer fcn
+def test_sine(verb=0, netstruc='ff', **kwargs):
+    tNN = nn_p.nnp([1, 1000, 1], reg=10 ** -1, trans='tanh')
     X = np.array([np.array([x]) for x in np.arange(0, 2 * np.pi, .1)])
     Y = np.array([np.sin(x) + np.random.randn(x.shape[0]) * .001
                  for x in X])
-    tNN.train(X, Y, epochs=100, verb=verb, re_init=3, re_init_d=10)
+    tNN.train(X, Y, epochs=2000, verb=verb, re_init=3, re_init_d=10, **kwargs)
     y_predict = tNN.predict(X)
     if verb > 0:
         print(Y.flatten())
+        plt.plot(X, Y)
+        plt.plot(X, y_predict)
+        plt.show()
     if verb > -1:
         helper.print_y(y_predict, Y)
     return np.mean(np.square(y_predict - Y))
-if 0:
-    sine_error = test_sine(verb=0)
+if 1:
+    sine_error = test_sine(verb = 1, objective = 10**-10, del_thresh=10**-15,
+                           max_fail = 100, nudge = 100)
     print('Sine error is: ', sine_error)

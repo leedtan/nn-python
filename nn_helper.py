@@ -24,9 +24,19 @@ def tanh_p(x):
     return 1.0 - x ** 2
 
 
+def purelin(x):
+    return x
+
+
+#this might be wrong
+def purelin_p(x):
+    return -1
+
+
 trans_fcns = {
               'sigmoid': [sigmoid, sigmoid_p],
-              'tanh': [tanh, tanh_p]
+              'tanh': [tanh, tanh_p],
+              'purelin': [purelin, purelin_p]
               }
 
 
