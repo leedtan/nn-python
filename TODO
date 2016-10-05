@@ -12,6 +12,8 @@ Automatic k-fold validation (A)
 End training if objective function met//not changing // num_epochs reaches (L)
 
 Largest assignments
+Graph training accuracy over time. Maybe allow user to click to end training? Matlab has this feature.
+Visualize network automatically
 Redo predict to do forward pass with matrix math instead of for loop (A)
 Read data using pandas (build api/apply to clean then non-clean numeric and non-numeric data)
 Add recurrent connections (backprop length passed in as parameter)
