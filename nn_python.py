@@ -227,7 +227,7 @@ class nnp(object):
                           batch_type, verb, nudge, objective, del_thresh):
         X = self._verify_x(X)
         if isinstance(X, bool):
-            print("X size %d, need %d" % (X.shape[1], self.layers[0]))
+            print("X size %d, need %d" % (X.shape[0], self.layers[0]))
             return
         if self.Xstd == []:
             X, self.Xstd, self.Xoffset = helper.normalize(X)
@@ -249,7 +249,7 @@ class nnp(object):
         self.gb_weights = helper.copy_weights(self.best_weights)
         self.gb_perf = np.copy(self.best_perf)
         self.gb_LR = self.LR
-        return X
+        return X, Y
 
 #This is a very complicated function. Essentially if the
 #optimization is stuck at a flat area, this should nudge it around randomly
@@ -287,7 +287,7 @@ class nnp(object):
     def train(self, X, Y, LR=1, batch_type=helper.GROUP, verb=0,
               re_init=3, re_init_d=10, epochs = 10,
               nudge = 0, objective = 0, del_thresh=0, max_fail = np.inf):
-        X = self._prepare_training(X, Y, LR, batch_type, verb,
+        X, Y = self._prepare_training(X, Y, LR, batch_type, verb,
                                    nudge, objective, del_thresh)
         self._init_k_times(X, Y, re_init, re_init_d, LR)
         self.best_perf = self.gb_perf
