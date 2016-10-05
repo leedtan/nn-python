@@ -98,16 +98,19 @@ class nnp(object):
         for i in batch:
             self._train_one_sample(X[i], Y[i])
         self._update_all_batch_deltas()
-        self._test_batch(X, Y)
+        err = self._test_batch(X, Y)
+        return err
 
     def _run_epoch(self, X, Y):
+        err = 0
         perm = np.random.permutation(self.samples)
         for batch_idx in range(self.num_batches):
             batch = perm[self.batch_size * batch_idx:self.batch_size *
                          (batch_idx + 1)]
             if batch_idx == self.num_batches - 1:
                 batch = perm[self.batch_size * batch_idx:]
-            self._run_batch(batch, X, Y)
+            err += self._run_batch(batch, X, Y)
+        return err
 
     def _prop_back_one_layer(self, idx):
         return np.sum(
@@ -142,7 +145,13 @@ class nnp(object):
         self._add_error_to_edges()
 
     def _update_LR(self, batch_perf):
-        if batch_perf < self.best_perf * 1.000001:
+        #networks can get stuck without thit >1 multiplication
+        #needs to be signifcantly greater than one to allow encourage movement
+        #along reasonably flat planes in the parameter optimization space
+        #Maybe should update over time or be a hyper parameter, or calculated
+        #in some other fashion. May not be needed for more complex algorithms.
+        epsilon = .001
+        if batch_perf < self.best_perf * (1+epsilon):
             self.LR *= 1.05
             self.best_perf = batch_perf
             self.best_weights = helper.copy_weights(self.weights)
@@ -159,6 +168,7 @@ class nnp(object):
             self._prop_fwd()
             batch_perf += self.perf_fcn(Y[i], self.act_vals[-1]) / self.samples
         self._update_LR(batch_perf)
+        return batch_perf
 
     def _verify_x(self, X):
         if X.ndim < 2:
@@ -213,7 +223,8 @@ class nnp(object):
     def _denormalize_Y(self, Y):
         return (Y + self.Yoffset) * self.Yscale
 
-    def _prepare_training(self, X, Y, LR, batch_type, verb):
+    def _prepare_training(self, X, Y, LR,
+                          batch_type, verb, objective, del_thresh):
         X = self._verify_x(X)
         if isinstance(X, bool):
             print("X size %d, need %d" % (X.shape[1], self.layers[0]))
@@ -224,6 +235,9 @@ class nnp(object):
             X = helper.apply_norm(X, self.Xstd, self.Xoffset)
         self.samples = X.shape[0]
         self.verb = verb
+        self.objective = objective
+        self.del_thresh = del_thresh
+        self.best_epoch = 0
         self.LR = LR
         if self.Yscale == 0:
             self.Yscale, self.Yoffset = self._calc_norm_Y(Y)
@@ -235,16 +249,35 @@ class nnp(object):
         self.gb_LR = self.LR
         return X
 
-    def train(self, X, Y, LR=1, epochs=10,
-              batch_type=helper.GROUP, verb=0, re_init=3, re_init_d=10):
-        X = self._prepare_training(X, Y, LR, batch_type, verb)
+    def _eval_perf(self, perf, epoch, del_thresh, max_fail):
+        if perf < self.objective:
+            print("reached optimization objective at \
+                    {0} epochs".format(epoch))
+            return helper.STOP_TRAIN
+        if perf < self.gb_perf - del_thresh:
+            self.gb_perf = perf
+            self.best_epoch = epoch
+        else:
+            if epoch > self.best_epoch + max_fail:
+                print ("no longer improvng after {0} epochs"
+                       .format(self.best_epoch))
+                return helper.STOP_TRAIN
+
+    def train(self, X, Y, LR=1, batch_type=helper.GROUP, verb=0,
+              re_init=3, re_init_d=10,
+              epochs = 10, objective = 0, del_thresh=0, max_fail = np.inf):
+        X = self._prepare_training(X, Y, LR, batch_type, verb,
+                                   objective, del_thresh)
         self._init_k_times(X, Y, re_init, re_init_d, LR)
         self.best_perf = self.gb_perf
         self.best_weights = helper.copy_weights(self.gb_weights)
         self.weights = helper.copy_weights(self.best_weights)
         self.LR = self.gb_LR
-        for _ in range(epochs):
-            self._run_epoch(X, Y)
+        for epoch in range(epochs):
+            perf = self._run_epoch(X, Y)
+            if self._eval_perf(perf, epoch, del_thresh, max_fail) == \
+                    helper.STOP_TRAIN:
+                break
         self.weights = helper.copy_weights(self.best_weights)
 
     def predict(self, x):

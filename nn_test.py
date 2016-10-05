@@ -16,12 +16,12 @@ def test_xor(verb=0, re_init=10, netstruc='ff'):
     if verb > -1:
         helper.print_y(y_predict, Y)
     return np.mean(np.square(y_predict - Y))
-np.random.seed(1)
-#test_xor()
+np.random.seed(2)
+test_xor()
 
 
-def test_xor3(verb=0, netstruc='ff'):
-    tNN = nn_p.nnp([3, 500, 1], reg=10 ** -10)
+def test_xor3(verb=0, netstruc='ff', **kwargs):
+    tNN = nn_p.nnp([3, 1000, 1], reg=10 ** -10)
     X = np.array([[0, 0, 0],
                   [0, 1, 0],
                   [1, 0, 0],
@@ -33,12 +33,13 @@ def test_xor3(verb=0, netstruc='ff'):
     Y = np.array([np.array([x[0] ^ x[1] ^ x[2]]) for x in X])
     if verb > -1:
         print(Y.flatten())
-    tNN.train(X, Y, epochs=100, verb=verb, re_init=10, re_init_d=20)
+    tNN.train(X, Y, epochs=2000, verb=verb, re_init=10, re_init_d=20,
+              **kwargs)
     y_predict = tNN.predict(X)
     if verb > -1:
         helper.print_y(y_predict, Y)
     return np.mean(np.square(y_predict - Y))
-test_xor3()
+test_xor3(objective = 10**-10, del_thresh=10**-15, max_fail = 800)
 
 
 # Does not yet work well.

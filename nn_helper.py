@@ -4,6 +4,7 @@ import numpy as np
 SOLO = -1
 GROUP = 0
 
+STOP_TRAIN = -1
 cat = np.concatenate
 
 
