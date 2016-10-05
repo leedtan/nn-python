@@ -33,13 +33,13 @@ def test_xor3(verb=0, netstruc='ff', **kwargs):
     Y = np.array([np.array([x[0] ^ x[1] ^ x[2]]) for x in X])
     if verb > -1:
         print(Y.flatten())
-    tNN.train(X, Y, epochs=2000, verb=verb, re_init=10, re_init_d=20,
+    tNN.train(X, Y, epochs=1000, verb=verb, re_init=10, re_init_d=20,
               **kwargs)
     y_predict = tNN.predict(X)
     if verb > -1:
         helper.print_y(y_predict, Y)
     return np.mean(np.square(y_predict - Y))
-test_xor3(objective = 10**-10, del_thresh=10**-15, max_fail = 800)
+test_xor3(objective = 10**-10, del_thresh=10**-15, max_fail = 100, nudge = 10)
 
 
 # Does not yet work well.

@@ -123,7 +123,7 @@ class nnp(object):
         for idx in range(len(self.deltas) - 2, 0, -1):
             self.deltas[idx] = self._prop_back_one_layer(idx)
 
-    def _add_error_to_one__edge(self, row, col):
+    def _add_error_to_one_edge(self, row, col):
         self.batch_deltas[row][col] += self.LR * (
             np.atleast_2d(helper.cat((self.act_vals[row], [1]))).T
             .dot(np.atleast_2d(self.deltas[col])) -
@@ -134,7 +134,7 @@ class nnp(object):
         for row in range(len(self.weights)):
             for col in range(len(self.weights[0])):
                 if self.Lmap[row][col]:
-                    self._add_error_to_one__edge(row, col)
+                    self._add_error_to_one_edge(row, col)
 
     def _train_one_sample(self, Xi, yi):
         self.act_vals[0] = Xi
@@ -224,7 +224,7 @@ class nnp(object):
         return (Y + self.Yoffset) * self.Yscale
 
     def _prepare_training(self, X, Y, LR,
-                          batch_type, verb, objective, del_thresh):
+                          batch_type, verb, nudge, objective, del_thresh):
         X = self._verify_x(X)
         if isinstance(X, bool):
             print("X size %d, need %d" % (X.shape[1], self.layers[0]))
@@ -237,6 +237,8 @@ class nnp(object):
         self.verb = verb
         self.objective = objective
         self.del_thresh = del_thresh
+        self.max_nudge = nudge
+        self.nudge = 0
         self.best_epoch = 0
         self.LR = LR
         if self.Yscale == 0:
@@ -249,25 +251,44 @@ class nnp(object):
         self.gb_LR = self.LR
         return X
 
+#This is a very complicated function. Essentially if the
+#optimization is stuck at a flat area, this should nudge it around randomly
+#the math is to control the size of the adjustment to be random but relative
+#to the edge weights
+    def _nudge(self):
+        self.nudge += 1
+        for row in range(len(self.weights)):
+            for col in range(len(self.weights[0])):
+                if self.Lmap[row][col]:
+                    self.weights[row][col] -= (
+                            self.weights[row][col] *
+                            np.random.random(self.weights[row][col].shape)
+                            * np.random.random() * .5
+                    )
+
     def _eval_perf(self, perf, epoch, del_thresh, max_fail):
         if perf < self.objective:
             print("reached optimization objective at \
                     {0} epochs".format(epoch))
             return helper.STOP_TRAIN
         if perf < self.gb_perf - del_thresh:
+            self.nudge = 0
             self.gb_perf = perf
             self.best_epoch = epoch
         else:
             if epoch > self.best_epoch + max_fail:
-                print ("no longer improvng after {0} epochs"
-                       .format(self.best_epoch))
-                return helper.STOP_TRAIN
+                if self.nudge < self.max_nudge:
+                    self._nudge()
+                else:
+                    print ("no longer improvng after {0} epochs"
+                           .format(self.best_epoch))
+                    return helper.STOP_TRAIN
 
     def train(self, X, Y, LR=1, batch_type=helper.GROUP, verb=0,
-              re_init=3, re_init_d=10,
-              epochs = 10, objective = 0, del_thresh=0, max_fail = np.inf):
+              re_init=3, re_init_d=10, epochs = 10,
+              nudge = 0, objective = 0, del_thresh=0, max_fail = np.inf):
         X = self._prepare_training(X, Y, LR, batch_type, verb,
-                                   objective, del_thresh)
+                                   nudge, objective, del_thresh)
         self._init_k_times(X, Y, re_init, re_init_d, LR)
         self.best_perf = self.gb_perf
         self.best_weights = helper.copy_weights(self.gb_weights)
