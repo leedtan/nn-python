@@ -9,7 +9,7 @@ Add Constant learning rate (choose optimization algorithm) (V)
 Medium:
 Add hyperparameter optimization functions
 Automatic k-fold validation (A)
-End training if objective function met//not changing // num_epochs reaches (L)
+End training if objective function met//not changing // num_epochs reaches (L - Done)
 
 Largest assignments
 Graph training accuracy over time. Maybe allow user to click to end training? Matlab has this feature.
