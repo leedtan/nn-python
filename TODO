@@ -15,7 +15,7 @@ Implement ADAM convex optimization algo for backpropogation
 Andy
 Read data using pandas (build api/apply to clean then non-clean numeric and non-numeric data)
   Implement a basic X, Y= pd_wrapper.read_to_learnable('file')
-  handle inputs about where the output variable(s) are
+  handle inputs specifying where the output variable is
 Data Imputation
   Throw away any rows with Null values
   Replace null values with constant
