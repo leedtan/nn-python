@@ -2,8 +2,9 @@ EASY Viola:
 Implement crossentropy perf fcn
 Implement softmax transfer fcn (to use with cross entropy to output layer)
 Implement purelin transfer fcn (to use as output layer for regression)
-Add test functions
+Add regression test function (test all test functions, track their accuracies, make sure their accuracies stay in low range)
 Write documentations for interfaces and all functions and parameters used by users
+Write documentation for all internal functions
 
 Medium Lee:
 Add hyperparameter optimization functions
