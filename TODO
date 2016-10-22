@@ -11,6 +11,7 @@ Add hyperparameter optimization functions
 Automatic k-fold validation (A)
 End training if objective function met//not changing // num_epochs reaches (L - Done)
 Implement ADAM convex optimization algo for backpropogation
+  AdaDelta, RMSprop(for RNNs)
 
 Andy
 Read data using pandas (build api/apply to clean then non-clean numeric and non-numeric data)
