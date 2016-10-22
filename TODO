@@ -42,3 +42,4 @@ Maybe outside scope of class:
 Add recurrent connections (backprop length passed in as parameter)
 implement convolutional layer
 Implement pooling layer
+Parralelize mini-batch/batch
