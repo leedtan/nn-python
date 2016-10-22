@@ -1,25 +1,24 @@
-Redo naming convention Sunday (A)
-EASY: 
-Implement crossentropy perf fcn (V)
-Implement softmax transfer fcn (to use with cross entropy to output layer) (A)
-Implement purelin transfer fcn (to use as output layer for regression) (V)
-Add test functions (A/L)
-Add Constant learning rate (choose optimization algorithm) (V)
+EASY Viola: 
+Implement crossentropy perf fcn
+Implement softmax transfer fcn (to use with cross entropy to output layer)
+Implement purelin transfer fcn (to use as output layer for regression)
+Add test functions
 
-Medium:
+Medium Lee:
 Add hyperparameter optimization functions
 Automatic k-fold validation (A)
 End training if objective function met//not changing // num_epochs reaches (L - Done)
 
 Largest assignments
-Graph training accuracy over time. Maybe allow user to click to end training? Matlab has this feature.
-Visualize network automatically
-Redo predict to do forward pass with matrix math instead of for loop (A)
+Redo predict to do forward pass with matrix math instead of for loop
 Read data using pandas (build api/apply to clean then non-clean numeric and non-numeric data)
-Add recurrent connections (backprop length passed in as parameter)
-implement convolutional layer
-Implement pooling layer
+  Implement a basic X, Y= pd_wrapper.read_to_learnable('file')
 Implement ADAM convex optimization algo for backpropogation
+Data Imputation
+  Throw away any rows with Null values
+  Replace null values with constant
+  Replace null values with column averages
+  KNN imputation of Null values
 
 Notes:
 Lees idea:
@@ -28,3 +27,12 @@ Net =  NN_UF(X=X, Y=Y, hidden=[100])
 
 Andy idea about pickle:
 if filetype(file) == csv: initial_vals = pd.read_csv(file) elif filetype(file) == pickle: init_vals = pd.read_pickle(file)
+
+Later on:
+Graph training accuracy over time. Maybe allow user to click to end training? Matlab has this feature.
+Visualize network automatically
+
+Maybe outside scope of class:
+Add recurrent connections (backprop length passed in as parameter)
+implement convolutional layer
+Implement pooling layer
