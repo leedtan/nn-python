@@ -20,3 +20,11 @@ Add recurrent connections (backprop length passed in as parameter)
 implement convolutional layer
 Implement pooling layer
 Implement ADAM convex optimization algo for backpropogation
+
+Notes:
+Lees idea:
+X, Y= pd_wrapper.read_to_learnable('file')
+Net =  NN_UF(X=X, Y=Y, hidden=[100])
+
+Andy idea about pickle:
+if filetype(file) == csv: initial_vals = pd.read_csv(file) elif filetype(file) == pickle: init_vals = pd.read_pickle(file)
