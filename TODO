@@ -1,4 +1,4 @@
-EASY Viola: 
+Viola: 
 Implement crossentropy perf fcn
 Implement softmax transfer fcn (to use with cross entropy to output layer)
 Implement purelin transfer fcn (to use as output layer for regression)
@@ -6,21 +6,24 @@ Add regression test function (test all test functions, track their accuracies, m
 Write documentations for interfaces and all functions and parameters used by users
 Write documentation for all internal functions
 
-Medium Lee:
+Lee:
 Add hyperparameter optimization functions
 Automatic k-fold validation (A)
 End training if objective function met//not changing // num_epochs reaches (L - Done)
+Implement ADAM convex optimization algo for backpropogation
 
-Largest assignments
-Redo predict to do forward pass with matrix math instead of for loop
+Andy
 Read data using pandas (build api/apply to clean then non-clean numeric and non-numeric data)
   Implement a basic X, Y= pd_wrapper.read_to_learnable('file')
-Implement ADAM convex optimization algo for backpropogation
+  handle inputs about where the output variable(s) are
 Data Imputation
   Throw away any rows with Null values
   Replace null values with constant
   Replace null values with column averages
   KNN imputation of Null values
+  
+Other
+Redo predict to do forward pass with matrix math instead of for loop
 
 Notes:
 Lees idea:
