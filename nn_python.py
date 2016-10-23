@@ -31,7 +31,7 @@ class nnp(object):
             self.perf_fcn = helper.mse
             self.perf_fcn_p = helper.mse_p
 
-    def _initweights(self, std=.01):
+    def _initweights(self, std=.0001):
         self.weights = [[[0] for _ in range(len(self.Lmap))]
                         for _ in range(len(self.Lmap[0]))]
         for r_idx in range(len(self.weights)):
@@ -146,7 +146,7 @@ class nnp(object):
 
     def _update_LR(self, batch_perf):
         #simple opt algorithms can get stuck without thit >1 multiplication
-        epsilon = 10**-10
+        epsilon = 10**-4
         if batch_perf < self.best_perf * (1+epsilon):
             self.LR *= 1.05
             self.best_perf = batch_perf
@@ -259,7 +259,7 @@ class nnp(object):
                     self.weights[row][col] -= (
                             self.weights[row][col] *
                             np.random.random(self.weights[row][col].shape)
-                            * (np.random.random())**2 * 0.1
+                            * (np.random.random())**2 * 0.01
                     )
 
     def _eval_perf(self, perf, epoch, del_thresh, max_fail):

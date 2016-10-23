@@ -23,7 +23,7 @@ np.random.seed(2)
 
 
 def test_xor3(verb=0, **kwargs):
-    tNN = nn_p.nnp([3, 1000, 1], reg=10 ** -10)
+    tNN = nn_p.nnp([3, 100, 100, 1], reg=10 ** -1)
     X = np.array([[0, 0, 0],
                   [0, 1, 0],
                   [1, 0, 0],
@@ -33,15 +33,18 @@ def test_xor3(verb=0, **kwargs):
                   [1, 0, 1],
                   [1, 1, 1]])
     Y = np.array([np.array([x[0] ^ x[1] ^ x[2]]) for x in X])
-    if verb > -1:
-        print(Y.flatten())
-    tNN.train(X, Y, epochs=1000, verb=verb, re_init=10, re_init_d=20,
+    tNN.train(X, Y, epochs=3000, verb=verb, re_init=10, re_init_d=20,
               **kwargs)
     y_predict = tNN.predict(X)
     if verb > -1:
+        print(Y.flatten())
         helper.print_y(y_predict, Y)
     return np.mean(np.square(y_predict - Y))
-#test_xor3(objective = 10**-10, del_thresh=10**-15, max_fail = 100, nudge = 10)
+if 0:
+    xor3_err = test_xor3(verb = 1,
+                objective = 10**-10, del_thresh=10**-15,
+                max_fail = 100, nudge = 100)
+    print("xor3 error is: " + str(xor3_err))
 
 
 # Does not yet work well. needs purelin transfer fcn
@@ -67,11 +70,11 @@ if 0:
 
 #need to visualize results
 def x1dotx2(verb=0, **kwargs):
-    tNN = nn_p.nnp([2, 100, 1], reg=10 ** 3, trans = 'tanh')
-    X = np.array([np.array([x, c]) for x in np.linspace(-1, 1, 3)
-                 for c in np.linspace(-1, 1, 3)])
+    tNN = nn_p.nnp([2, 10, 1], reg=0, trans = 'tanh')
+    X = np.array([np.array([x, c]) for x in np.linspace(-1, 10, 5)
+                 for c in np.linspace(-3, 5, 5)])
     Y = np.array([np.array([x[0] * x[1]]) for x in X])
-    tNN.train(X, Y, epochs=100000, verb=verb, re_init=10, re_init_d=10, **kwargs)
+    tNN.train(X, Y, epochs=10000, verb=verb, re_init=10, re_init_d=10, **kwargs)
     y_predict = tNN.predict(X)
     if verb > 0:
         print(Y.flatten())
@@ -90,7 +93,7 @@ def x1dotx2squared(verb=0, **kwargs):
                  for c in np.linspace(0, 1, 10)])
     Y = np.array([np.array([x[0] * x[1]]) for x in X])
     #val_err = validation.kfoldvalidation(X, Y, tNN, k=4, graph=True, **kwargs)
-    tNN.train(X, Y, epochs=500, verb=verb, re_init=5, re_init_d=30, **kwargs)
+    tNN.train(X, Y, epochs=500, verb=verb, re_init=1, re_init_d=30, **kwargs)
     y_predict = tNN.predict(X)
     if verb > 0:
         print(Y.flatten())

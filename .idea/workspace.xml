@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9b3b80b5-973b-4d8e-a998-bfe194767e0b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn_helper.py" afterPath="$PROJECT_DIR$/nn_helper.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn_python.py" afterPath="$PROJECT_DIR$/nn_python.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nn_test.py" afterPath="$PROJECT_DIR$/nn_test.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/playground.py" afterPath="$PROJECT_DIR$/playground.py" />
     </list>
     <ignored path="nn-python.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,8 +26,8 @@
       <file leaf-file-name="nn_helper.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nn_helper.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="147">
-              <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
+            <state relative-caret-position="0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -39,8 +36,8 @@
       <file leaf-file-name="nn_python.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nn_python.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2083">
-              <caret line="148" column="25" selection-start-line="148" selection-start-column="25" selection-end-line="148" selection-end-column="25" />
+            <state relative-caret-position="191">
+              <caret line="110" column="0" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -51,8 +48,8 @@
       <file leaf-file-name="nn_test.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nn_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="71" column="46" selection-start-line="71" selection-start-column="46" selection-end-line="71" selection-end-column="46" />
+            <state relative-caret-position="-250">
+              <caret line="74" column="43" selection-start-line="74" selection-start-column="43" selection-end-line="74" selection-end-column="43" />
               <folding>
                 <element signature="e#0#24#0" expanded="true" />
               </folding>
@@ -209,6 +206,23 @@
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
     </configuration>
+    <configuration default="false" name="nn_helper" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="nn-python" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/nn_helper.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -356,14 +370,16 @@
       <option name="USE_KEYWORD" value="false" />
       <method />
     </configuration>
-    <list size="2">
+    <list size="3">
       <item index="0" class="java.lang.String" itemvalue="Python.nn_test" />
       <item index="1" class="java.lang.String" itemvalue="Python.playground" />
+      <item index="2" class="java.lang.String" itemvalue="Python.nn_helper" />
     </list>
     <recent_temporary>
-      <list size="2">
+      <list size="3">
         <item index="0" class="java.lang.String" itemvalue="Python.nn_test" />
-        <item index="1" class="java.lang.String" itemvalue="Python.playground" />
+        <item index="1" class="java.lang.String" itemvalue="Python.nn_helper" />
+        <item index="2" class="java.lang.String" itemvalue="Python.playground" />
       </list>
     </recent_temporary>
   </component>
@@ -409,12 +425,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/nn_test.py</url>
-          <line>98</line>
+          <line>101</line>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/nn_test.py</url>
-          <line>92</line>
+          <line>95</line>
           <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
@@ -427,8 +443,13 @@
           <line>301</line>
           <option name="timeStamp" value="33" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/nn_python.py</url>
+          <line>105</line>
+          <option name="timeStamp" value="35" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="35" />
+      <option name="time" value="36" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -704,16 +725,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nn_helper.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/nn_python.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2083">
-          <caret line="148" column="25" selection-start-line="148" selection-start-column="25" selection-end-line="148" selection-end-column="25" />
+        <state relative-caret-position="191">
+          <caret line="110" column="0" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>
@@ -722,8 +743,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nn_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="71" column="46" selection-start-line="71" selection-start-column="46" selection-end-line="71" selection-end-column="46" />
+        <state relative-caret-position="-250">
+          <caret line="74" column="43" selection-start-line="74" selection-start-column="43" selection-end-line="74" selection-end-column="43" />
           <folding>
             <element signature="e#0#24#0" expanded="true" />
           </folding>
