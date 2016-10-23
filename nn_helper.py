@@ -63,9 +63,9 @@ def apply_norm(X, Xstd, Xoffset):
 
 
 def normalize(vect):
-    offset = np.mean(vect)
+    offset = np.mean(vect,0)
     vect = vect - offset
-    stdev = np.std(vect)
+    stdev = np.std(vect,0)
     vect = vect / stdev
     return [vect, stdev, offset]
 

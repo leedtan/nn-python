@@ -31,7 +31,7 @@ class nnp(object):
             self.perf_fcn = helper.mse
             self.perf_fcn_p = helper.mse_p
 
-    def _initweights(self, std=.1):
+    def _initweights(self, std=.01):
         self.weights = [[[0] for _ in range(len(self.Lmap))]
                         for _ in range(len(self.Lmap[0]))]
         for r_idx in range(len(self.weights)):
@@ -123,18 +123,18 @@ class nnp(object):
         for idx in range(len(self.deltas) - 2, 0, -1):
             self.deltas[idx] = self._prop_back_one_layer(idx)
 
-    def _add_error_to_one_edge(self, row, col):
+    def _add_error_to_one_delta_edge(self, row, col):
         self.batch_deltas[row][col] += self.LR * (
             np.atleast_2d(helper.cat((self.act_vals[row], [1]))).T
             .dot(np.atleast_2d(self.deltas[col])) -
             self.reg * self.weights[row][col] *
             (col < len(self.weights[0]) - 1)) / self.layers[row]
 
-    def _add_error_to_edges(self):
+    def _add_error_to_delta_edges(self):
         for row in range(len(self.weights)):
             for col in range(len(self.weights[0])):
                 if self.Lmap[row][col]:
-                    self._add_error_to_one_edge(row, col)
+                    self._add_error_to_one_delta_edge(row, col)
 
     def _train_one_sample(self, Xi, yi):
         self.act_vals[0] = Xi
@@ -142,15 +142,11 @@ class nnp(object):
         self.deltas[-1] = self.perf_fcn_p(
             yi, self.act_vals[-1]) / self.samples
         self._prop_back()
-        self._add_error_to_edges()
+        self._add_error_to_delta_edges()
 
     def _update_LR(self, batch_perf):
-        #networks can get stuck without thit >1 multiplication
-        #needs to be signifcantly greater than one to allow encourage movement
-        #along reasonably flat planes in the parameter optimization space
-        #Maybe should update over time or be a hyper parameter, or calculated
-        #in some other fashion. May not be needed for more complex algorithms.
-        epsilon = .001
+        #simple opt algorithms can get stuck without thit >1 multiplication
+        epsilon = 10**-10
         if batch_perf < self.best_perf * (1+epsilon):
             self.LR *= 1.05
             self.best_perf = batch_perf
@@ -263,7 +259,7 @@ class nnp(object):
                     self.weights[row][col] -= (
                             self.weights[row][col] *
                             np.random.random(self.weights[row][col].shape)
-                            * np.random.random() * .5
+                            * (np.random.random())**2 * 0.1
                     )
 
     def _eval_perf(self, perf, epoch, del_thresh, max_fail):
@@ -284,11 +280,11 @@ class nnp(object):
                            .format(self.best_epoch))
                     return helper.STOP_TRAIN
 
-    def train(self, X, Y, LR=1, batch_type=helper.GROUP, verb=0,
+    def train(self, X, Y, LR=10**-3, batch_type=helper.GROUP, verb=0,
               re_init=3, re_init_d=10, epochs = 10,
               nudge = 0, objective = 0, del_thresh=0, max_fail = np.inf):
         X, Y = self._prepare_training(X, Y, LR, batch_type, verb,
-                                   nudge, objective, del_thresh)
+                                      nudge, objective, del_thresh)
         self._init_k_times(X, Y, re_init, re_init_d, LR)
         self.best_perf = self.gb_perf
         self.best_weights = helper.copy_weights(self.gb_weights)
